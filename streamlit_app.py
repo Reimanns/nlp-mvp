@@ -1,4 +1,15 @@
 import os
+
+import os, shutil
+
+# Point Chroma at DuckDB+Parquet
+os.environ["CHROMA_DB_IMPL"] = "duckdb+parquet"
+
+# Remove any old sqlite-backed store so a fresh DuckDB one is created
+PERSIST_DIR = "vector_store"
+if os.path.isdir(PERSIST_DIR):
+    shutil.rmtree(PERSIST_DIR)
+
 import streamlit as st
 from chromadb.config import Settings
 from langchain.embeddings import OpenAIEmbeddings
