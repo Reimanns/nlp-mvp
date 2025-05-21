@@ -3,7 +3,7 @@ uvicorn[standard]
 python-docx
 pdfplumber
 langchain
-chromadb
+faiss-cpu
 openai
 pydantic
 streamlit
