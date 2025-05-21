@@ -8,3 +8,4 @@ openai
 pydantic
 streamlit
 langchain-community
+pysqlite3-binary>=0.0.6
