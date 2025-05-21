@@ -13,3 +13,4 @@ duckdb
 tiktoken
 sentence-transformers
 torch>=1.12.0
+gpt4all
