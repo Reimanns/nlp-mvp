@@ -20,8 +20,11 @@ text_splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=100
 vectordb = Chroma(
     collection_name="streamlit_rag",
     embedding_function=embedder,
-    persist_directory=PERSIST_DIR
-)
+    persist_directory=PERSIST_DIR,
+    client_settings=Settings(
+        chroma_db_impl="duckdb+parquet",  # use DuckDB+Parquet store
+        persist_directory=PERSIST_DIR
+    )
 
 # Build QA chain (lazy init after ingest)
 llm = OpenAI(model_name="gpt-4o-mini", temperature=0)
