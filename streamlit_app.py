@@ -25,7 +25,7 @@ vectordb = Chroma(
         chroma_db_impl="duckdb+parquet",  # use DuckDB+Parquet store
         persist_directory=PERSIST_DIR
     )
-
+)
 # Build QA chain (lazy init after ingest)
 llm = OpenAI(model_name="gpt-4o-mini", temperature=0)
 
