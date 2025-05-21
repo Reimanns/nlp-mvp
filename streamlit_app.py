@@ -32,17 +32,18 @@ class STEEmbedder(Embeddings):
 embedder = STEEmbedder()
 splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=100)
 
-# Setup HuggingFace LLM pipeline
+# Configure HuggingFace LLM pipeline using max_new_tokens instead of max_length
 hf_pipeline = pipeline(
     "text-generation",
     model=LLM_MODEL,
     device=-1,
-    max_length=200,
-    do_sample=False
+    max_new_tokens=200,
+    do_sample=False,
+    truncation=True
 )
 llm = HuggingFacePipeline(pipeline=hf_pipeline)
 
-# Ensure vectordb persists across reruns
+# Persist FAISS in session state
 if 'vectordb' not in st.session_state:
     st.session_state['vectordb'] = None
 
@@ -76,7 +77,6 @@ def ingest_docs():
         all_texts.extend(chunks)
         metadatas.extend([{"source": fname}] * len(chunks))
 
-    # Build and store FAISS index
     st.session_state['vectordb'] = FAISS.from_texts(
         texts=all_texts,
         embedding=embedder,
@@ -86,7 +86,7 @@ def ingest_docs():
 
 
 def query_docs(question: str, top_k: int = 5) -> str:
-    vectordb = st.session_state.get('vectordb')
+    vectordb = st.session_state['vectordb']
     if vectordb is None:
         return "⚠️ Please click **Ingest Documents** first."
     qa = RetrievalQA.from_chain_type(
@@ -100,26 +100,22 @@ def query_docs(question: str, top_k: int = 5) -> str:
 st.set_page_config(page_title="Free Local RAG", layout="wide")
 st.title("📚 Free Local RAG with FAISS & HuggingFace")
 
-# Sidebar actions
 if st.sidebar.button("Ingest Documents"):
     with st.spinner("Building FAISS index..."):
         ingest_docs()
 
-# Sidebar controls
-top_k = st.sidebar.slider("Top K passages", min_value=1, max_value=10, value=5)
+k = st.sidebar.slider("Top K passages", min_value=1, max_value=10, value=5)
 
-# Main query section
 query = st.text_input("🔍 Ask a question about your documents:")
 if st.button("Search"):
     if not query:
         st.warning("Enter a question to search.")
     else:
         with st.spinner("Generating answer..."):
-            answer = query_docs(query, top_k)
+            answer = query_docs(query, k)
             st.subheader("Answer")
             st.write(answer)
 
-# Footer instructions
 st.markdown("---")
 st.markdown(
     """
