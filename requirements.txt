@@ -6,3 +6,5 @@ langchain
 chromadb
 openai
 pydantic
+streamlit
+langchain-community
