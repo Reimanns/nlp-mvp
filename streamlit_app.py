@@ -1,5 +1,6 @@
 import os
 import streamlit as st
+from chromadb.config import Settings
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.text_splitter import RecursiveCharacterTextSplitter
