@@ -98,7 +98,7 @@ def query_docs(question: str, top_k: int = 5) -> str:
 
 # ── Streamlit UI ───────────────────────────────────────────────────────────────
 st.set_page_config(page_title="Free Local RAG", layout="wide")
-st.title("📚 Natural Language Processing Model - RFQs and Lessons Learned")
+st.title("Intelligent RFQ Repository")
 
 if st.sidebar.button("Ingest Documents"):
     with st.spinner("Building FAISS index..."):
